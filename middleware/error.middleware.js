@@ -7,6 +7,7 @@ const errorMiddleware = async (err, req, res, next) => {
       .json({
         message: err.message,
         error: true,
+        result: null,
       })
       .end();
   } else {
@@ -15,6 +16,7 @@ const errorMiddleware = async (err, req, res, next) => {
       .json({
         message: err.message,
         error: true,
+        result: null,
       })
       .end();
   }

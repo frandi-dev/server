@@ -1,12 +1,12 @@
 const validate = require("../validation");
-const { registerUserValidation } = require("../validation/user.validation");
+const { createUserValidation } = require("../validation/user.validation");
 const ResponseError = require("../utils/response.error");
 const db = require("../utils/db");
 const { hash } = require("../utils/password");
 
 const createUser = async (request) => {
   // validasi fild request body
-  const data = validate(registerUserValidation, request);
+  const data = validate(createUserValidation, request);
   // cek apakah user sudah terdaftar
   const userCount = await db.users.count({
     where: {

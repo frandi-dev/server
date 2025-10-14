@@ -3,8 +3,8 @@ POST http://localhost:5000/api/users
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "nama": "admin",
-  "password": "admin",
-  "role": "admin"
+  "username": "kasir",
+  "nama": "kasir",
+  "password": "kasir",
+  "role": "kasir"
 }
