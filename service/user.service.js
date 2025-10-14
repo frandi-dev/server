@@ -80,6 +80,7 @@ const loginUser = async (request) => {
   return db.users.update({
     data: {
       token,
+      is_active: true,
     },
     where: {
       username: user.username,
@@ -97,7 +98,7 @@ const loginUser = async (request) => {
  * @param {object} request
  * @returns {object}
  */
-const getUserByUsername = async (request) => {
+const getUserProfile = async (request) => {
   const username = validate(getUserByUsernameValidation, request);
   // cek apa kah data ada di db
   const user = await db.users.findUnique({
@@ -178,4 +179,30 @@ const updateUser = async (request) => {
   });
 };
 
-module.exports = { createUser, loginUser, getUserByUsername, updateUser };
+const logoutUser = async (request) => {
+  const username = validate(getUserByUsernameValidation, request);
+
+  const user = await db.users.findUnique({
+    where: { username },
+  });
+
+  if (!user) {
+    throw new ResponseError(404, "User not found");
+  }
+
+  return db.users.update({
+    where: { username },
+    data: {
+      token: null,
+      is_active: false,
+    },
+  });
+};
+
+module.exports = {
+  createUser,
+  loginUser,
+  getUserProfile,
+  updateUser,
+  logoutUser,
+};

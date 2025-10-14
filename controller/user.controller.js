@@ -36,12 +36,12 @@ const loginUser = async (req, res, next) => {
 };
 
 /**
- * [GET] /api/users/:username
- * handler untuk mengambil 1 data user
+ * [GET] /api/users/profile
+ * handler untuk mengambil profile
  */
-const getUserByUsername = async (req, res, next) => {
+const getUserProfile = async (req, res, next) => {
   try {
-    const result = await userService.getUserByUsername(req.params.username);
+    const result = await userService.getUserProfile(req.user.username);
 
     res.status(200).json({
       message: "success",
@@ -53,6 +53,10 @@ const getUserByUsername = async (req, res, next) => {
   }
 };
 
+/**
+ * [PATCH] /api/users/:username
+ * handler untuk mengambil 1 data user
+ */
 const updateUser = async (req, res, next) => {
   try {
     const request = req.body;
@@ -69,4 +73,27 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { createUser, loginUser, getUserByUsername, updateUser };
+/**
+ * [DELETE] /api/users/:username
+ * handler untuk mengambil 1 data user
+ */
+const logoutUser = async (req, res, next) => {
+  try {
+    const result = await userService.logoutUser(req.user.username);
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createUser,
+  loginUser,
+  getUserProfile,
+  updateUser,
+  logoutUser,
+};

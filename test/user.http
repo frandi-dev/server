@@ -19,9 +19,9 @@ Content-Type: application/json
 }
 
 ### get user by username
-GET http://localhost:5000/api/users/admin
+GET http://localhost:5000/api/users/profile
 Content-Type: application/json
-Authorization: f1b38087-0c90-405d-82e2-520fa4605a39
+Authorization: ae5de44b-bf8c-4031-a41b-daeebc3b5dee
 
 
 ### updata user
@@ -32,3 +32,9 @@ Authorization: 81dc720a-abd2-42fa-a083-c0673068d45a
 {
   "nama": "admin"
 }
+
+### logout user
+DELETE  http://localhost:5000/api/users/logout
+Content-Type: application/json
+Authorization: ae5de44b-bf8c-4031-a41b-daeebc3b5dee
+
