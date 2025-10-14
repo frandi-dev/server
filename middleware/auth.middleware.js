@@ -1,36 +1,41 @@
 const db = require("../utils/db");
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.get("Authorization");
-  if (!token) {
-    res
-      .status(401)
-      .json({
-        message: "Unauthorized",
+  try {
+    const token = req.get("Authorization");
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized - No token provided",
         error: true,
         result: null,
-      })
-      .end();
-  } else {
-    const user = db.users.findFirst({
+      });
+    }
+
+    const user = await db.users.findFirst({
       where: {
         token,
       },
     });
 
     if (!user) {
-      res
-        .status(401)
-        .json({
-          message: "Unauthorized",
-          error: true,
-          result: null,
-        })
-        .end();
-    } else {
-      req.user = user;
-      next();
+      return res.status(401).json({
+        message: "Unauthorized - Invalid token",
+        error: true,
+        result: null,
+      });
     }
+
+    // simpan user ke req untuk digunakan di controller
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: true,
+      result: null,
+    });
   }
 };
 

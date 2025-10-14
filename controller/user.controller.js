@@ -1,5 +1,4 @@
 const userService = require("../service/user.service");
-const logger = require("../utils/logger");
 
 /**
  * [POST] /api/users

@@ -9,7 +9,6 @@ const ResponseError = require("../utils/response.error");
 const db = require("../utils/db");
 const { hash, compare } = require("../utils/password");
 const { generate } = require("../utils/token");
-const logger = require("../utils/logger");
 
 /**
  * service untuk membuat user baru
@@ -127,7 +126,6 @@ const getUserByUsername = async (request) => {
  */
 const updateUser = async (request) => {
   const user = validate(updateUserValidation, request);
-  logger.info(user);
 
   // cek berapa user di db
   const totalUser = await db.users.count({

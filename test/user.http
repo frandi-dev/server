@@ -21,13 +21,13 @@ Content-Type: application/json
 ### get user by username
 GET http://localhost:5000/api/users/admin
 Content-Type: application/json
-Authorization: token f1b38087-0c90-405d-82e2-520fa4605a39
+Authorization: f1b38087-0c90-405d-82e2-520fa4605a39
 
 
 ### updata user
 PATCH  http://localhost:5000/api/users/admin
 Content-Type: application/json
-Authorization: token 9203b51b-b4a8-4c84-8df3-8db05203d94b
+Authorization: 81dc720a-abd2-42fa-a083-c0673068d45a
 
 {
   "nama": "admin"

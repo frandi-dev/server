@@ -2,13 +2,15 @@ const express = require("express");
 const route = new express.Router();
 const userController = require("../controller/user.controller");
 const authMiddleware = require("../middleware/auth.middleware");
+const adminMiddleware = require("../middleware/admin.middleware");
 
 route.post("/", userController.createUser);
 route.post("/login", userController.loginUser);
 
 // private router harus membutuhkan Authorization
 route.use(authMiddleware);
-route.patch("/:username", userController.updateUser);
 route.get("/:username", userController.getUserByUsername);
+
+route.patch("/:username", adminMiddleware, userController.updateUser);
 
 module.exports = route;
