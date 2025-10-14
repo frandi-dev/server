@@ -35,4 +35,22 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { createUser, loginUser };
+/**
+ * [GET] /api/users/:username
+ * handler untuk mengambil 1 data user
+ */
+const getUserByUsername = async (req, res, next) => {
+  try {
+    const result = await userService.getUserByUsername(req.params.username);
+
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createUser, loginUser, getUserByUsername };

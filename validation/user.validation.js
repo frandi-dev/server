@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const password = require("../utils/password");
 
 const createUserValidation = Joi.object({
   nama: Joi.string().min(5).max(50).required(),
@@ -13,4 +12,10 @@ const loginUserValidation = Joi.object({
   password: Joi.string().min(5).max(50).required(),
 });
 
-module.exports = { createUserValidation, loginUserValidation };
+const getUserByUsernameValidation = Joi.string().min(5).max(50).required();
+
+module.exports = {
+  createUserValidation,
+  loginUserValidation,
+  getUserByUsernameValidation,
+};

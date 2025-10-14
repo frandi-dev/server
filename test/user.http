@@ -17,3 +17,8 @@ Content-Type: application/json
   "username": "admin",
   "password": "admin"
 }
+
+### get user by username
+GET http://localhost:5000/api/users/admin
+Content-Type: application/json
+Authorization: token f1b38087-0c90-405d-82e2-520fa4605a39

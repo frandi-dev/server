@@ -2,12 +2,12 @@ const validate = require("../validation");
 const {
   createUserValidation,
   loginUserValidation,
+  getUserByUsernameValidation,
 } = require("../validation/user.validation");
 const ResponseError = require("../utils/response.error");
 const db = require("../utils/db");
 const { hash, compare } = require("../utils/password");
 const { generate } = require("../utils/token");
-const logger = require("../utils/logger");
 
 /**
  * service untuk membuat user baru
@@ -43,6 +43,11 @@ const createUser = async (request) => {
   });
 };
 
+/**
+ * service untuk login user
+ * @param {object} request
+ * @returns {object}
+ */
 const loginUser = async (request) => {
   const data = validate(loginUserValidation, request);
 
@@ -86,4 +91,31 @@ const loginUser = async (request) => {
   });
 };
 
-module.exports = { createUser, loginUser };
+/**
+ * service untuk mengambil data cuma 1 user dengan username
+ * @param {object} request
+ * @returns {object}
+ */
+const getUserByUsername = async (request) => {
+  const username = validate(getUserByUsernameValidation, request);
+  // cek apa kah data ada di db
+  const user = await db.users.findUnique({
+    where: {
+      username: username,
+    },
+    select: {
+      username: true,
+      nama: true,
+      role: true,
+      is_active: true,
+    },
+  });
+
+  if (!user) {
+    throw new ResponseError(404, "User not found");
+  }
+
+  return user;
+};
+
+module.exports = { createUser, loginUser, getUserByUsername };
