@@ -8,6 +8,7 @@ route.post("/login", userController.loginUser);
 
 // private router harus membutuhkan Authorization
 route.use(authMiddleware);
+route.patch("/", userController.updateUser);
 route.get("/:username", userController.getUserByUsername);
 
 module.exports = route;

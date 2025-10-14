@@ -1,4 +1,5 @@
 const userService = require("../service/user.service");
+const logger = require("../utils/logger");
 
 /**
  * [POST] /api/users
@@ -53,4 +54,20 @@ const getUserByUsername = async (req, res, next) => {
   }
 };
 
-module.exports = { createUser, loginUser, getUserByUsername };
+const updateUser = async (req, res, next) => {
+  try {
+    const request = req.body;
+    request.username = req.params.username;
+    const result = await userService.updateUser(request);
+
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createUser, loginUser, getUserByUsername, updateUser };

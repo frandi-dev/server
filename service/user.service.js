@@ -3,11 +3,13 @@ const {
   createUserValidation,
   loginUserValidation,
   getUserByUsernameValidation,
+  updateUserValidation,
 } = require("../validation/user.validation");
 const ResponseError = require("../utils/response.error");
 const db = require("../utils/db");
 const { hash, compare } = require("../utils/password");
 const { generate } = require("../utils/token");
+const logger = require("../utils/logger");
 
 /**
  * service untuk membuat user baru
@@ -118,4 +120,64 @@ const getUserByUsername = async (request) => {
   return user;
 };
 
-module.exports = { createUser, loginUser, getUserByUsername };
+/**
+ * service untuk update data user
+ * @param {object} request
+ * @returns {object}
+ */
+const updateUser = async (request) => {
+  const user = validate(updateUserValidation, request);
+  logger.info(user);
+
+  // cek berapa user di db
+  const totalUser = await db.users.count({
+    where: {
+      username: user.username,
+    },
+  });
+
+  // jika tidak ada di db kirim error
+  if (totalUser !== 1) {
+    throw new ResponseError(404, "User not found");
+  }
+
+  const data = {};
+
+  // cek apa ada fild nama
+  if (user.nama) {
+    data.nama = user.nama;
+  }
+  // cek apa ada fild password
+  if (user.password) {
+    data.password = await hash(user.password);
+  }
+  //cek apa ada fild role
+  if (user.role) {
+    // dan bila yang di update itu role admin maka tidak boleh
+    if (user.role === "admin") {
+      throw new ResponseError(403, "It is forbidden to change me admin");
+    } else {
+      data.role = user.role;
+    }
+  }
+  // cek apa ada fild is active
+  if (user.is_active) {
+    data.is_active = user.is_active;
+  }
+
+  // jika data sudah di isi maka langsung update
+  return db.users.update({
+    where: {
+      username: user.username,
+    },
+    data: data,
+    select: {
+      username: true,
+      nama: true,
+      role: true,
+      is_active: true,
+    },
+  });
+};
+
+module.exports = { createUser, loginUser, getUserByUsername, updateUser };
