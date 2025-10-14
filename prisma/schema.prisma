@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+// 1. users
+//  - Menyimpan data pengguna sistem: nama, username, password hash, role, dan token.
+//  - Role digunakan untuk kontrol akses (kasir, admin, dapur, dll).
+//  - Token bisa dipakai untuk login session atau API auth.
+model users {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(50)
+  username String @db.VarChar(50) @unique
+  password String @db.VarChar(255)
+  is_active Boolean @default(false)
+  token String? @db.VarChar(255)
+  role user_role @default(resepsionis)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  detail_pemesanan_fnb detail_pemesanan_fnb[]
+  transaksi transaksi[]
+}
+
+// enum untuk role users
+enum user_role {
+  admin
+  kasir
+  resepsionis
+  dapur
+}
+
+// 2. ruangan
+//  - Menyimpan data ruangan karaoke: nama, kapasitas, tarif, dan status.
+//  - Digunakan untuk alokasi saat pemesanan.
+model ruangan {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(50) @unique  //Nama unik untuk setiap ruangan
+  kapasitas Int @default(0) //Jumlah maksimal orang dalam ruangan
+  tarif_per_jam Decimal @db.Decimal(10,2) //Biaya sewa per jam
+  status status_ruangan @default(tersedia) //Status ketersediaan ruangan
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  pemesanan pemesanan[]
+}
+
+// enum untuk status ruangan
+enum status_ruangan {
+  tersedia
+  terisi
+  perawatan
+}
+
+// 3. pemesanan
+//  - Menyimpan sesi pemakaian ruangan oleh pelanggan.
+//  - Terhubung ke ruangan dan mencatat waktu mulai, estimasi selesai, dan aktual selesai.
+//  - Status bisa 'aktif', 'selesai', atau 'dibatalkan'.
+model pemesanan {
+    id Int @id @default(autoincrement())
+    id_ruangan Int
+    nama String @db.VarChar(100)  //Nama pelanggan yang melakukan pemesanan
+    waktu_mulai Decimal //Waktu mulai penggunaan ruangan
+    waktu_selesai_est Decimal //Estimasi waktu selesai
+    waktu_selesai_aktual Decimal //Waktu selesai aktual
+    status status_pemesanan @default(aktif) //Status pemesanan
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    // relasi ke users
+    ruangan ruangan @relation(fields: [id_ruangan],references: [id])
+    detail_pemesanan_fnb detail_pemesanan_fnb[]
+    transaksi transaksi[]
+    @@index([id_ruangan,waktu_mulai,status])
+
+}
+
+// enum untuk status pemesanan
+enum status_pemesanan {
+  aktif
+  selesai
+  dibatalkan
+}
+
+// 4. kategori_menu
+//  - Mengelompokkan item F&B: makanan, minuman, snack, dll.
+model kategori_menu {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(50) @unique //Kategori seperti makanan, minuman, snack'
+
+  menu_fnb menu_fnb[]
+}
+
+// 5. menu_fnb
+//  - Menyimpan daftar item F&B: nama, harga, stok, deskripsi, dan status ketersediaan.
+//  - Terhubung ke kategori_menu.
+model menu_fnb {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(50) // Nama item makanan/minuman
+  id_kategori Int
+  harga Decimal @db.Decimal(10,2) //Harga satuan minuman/makanan
+  stok Int @default(0) //stok jumlah makanan/minuman
+  status status_menu_fnb //status ketersediaan makanan/minuman
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+
+  kategori_menu kategori_menu @relation(fields: [id_kategori],references: [id])
+
+  detail_pemesanan_fnb detail_pemesanan_fnb[]
+  @@index([id_kategori,status])
+}
+
+//enum untuk ketersedian stok menu
+enum status_menu_fnb {
+  tersedia
+  habis
+}
+
+
+// 6. detail_pemesanan_fnb
+//  - Menyimpan pesanan F&B per sesi karaoke.
+//  - Terhubung ke pemesanan dan menu_fnb.
+//  - subtotal_harga = jumlah × harga → dihitung di backend saat insert.
+model detail_pemesanan_fnb {
+  id Int @id @default(autoincrement())
+  id_pemesanan Int
+  id_menu_fnb Int
+  jumlah Int @default(0)
+  subtotal Decimal @db.Decimal(10,2) //jumlah harga x harga
+  id_user Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users users @relation(fields: [id_user],references: [id])
+  pemesanan pemesanan @relation(fields: [id_pemesanan],references: [id])
+  menu_fnb menu_fnb @relation(fields: [id_menu_fnb],references: [id])
+
+  @@index([id_pemesanan,id_menu_fnb,id_user])
+}
+
+// 7. transaksi
+//  - Menyimpan pembayaran akhir dari sesi karaoke.
+//  - Menggabungkan total_sewa dan biaya_tambahan dari F&B.
+//  - Menyimpan jumlah_bayar, kembalian, dan metode_pembayaran.
+//  - Kolom user menunjukkan siapa yang memproses transaksi (kasir/admin/resepsionis).
+model transaksi {
+  id Int @id @default(autoincrement())
+  id_pemesanan Int
+  id_user Int
+  total_sewa Decimal @db.Decimal(10,2) //Biaya sewa berdasarkan durasi
+  biaya_tambahan Decimal @db.Decimal(10,2) //Biaya tambahan seperti makanan/minuman
+  total_tagihan Decimal @db.Decimal(10,2) //Total keseluruhan tagihan
+  jumlah_bayar Decimal @db.Decimal(10,2)  //Jumlah yang dibayarkan oleh pelanggan
+  kembalian Decimal @db.Decimal(10,2) //Jumlah kembalian jika ada
+  metode_pembayaran metode_pembayaran @default(tunai)
+  catatan String @db.Text()
+  status status_pembayaran @default(belum_lunas)
+
+  users users @relation(fields: [id_user],references: [id])
+  pemesanan pemesanan @relation(fields: [id_pemesanan],references: [id])
+
+  @@index([id_user,id_pemesanan])
+}
+
+// enum untuk metode pembayaran
+enum metode_pembayaran {
+  tunai
+  transfer
+  qris
+}
+// enum untuk status pembayaran
+enum status_pembayaran {
+  lunas
+  belum_lunas
+}
