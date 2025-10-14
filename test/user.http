@@ -8,3 +8,12 @@ Content-Type: application/json
   "password": "kasir",
   "role": "kasir"
 }
+
+### login user
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
