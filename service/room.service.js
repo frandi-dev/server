@@ -143,8 +143,6 @@ const getAllRoom = async () => {
 };
 
 const deleteRoom = async (request) => {
-  console.log(request);
-
   const data = validate(idRequiredValidation, request);
 
   //cek apakah data room ada di db
