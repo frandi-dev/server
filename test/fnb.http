@@ -1,0 +1,15 @@
+### create menu
+POST http://localhost:5000/api/fnb
+Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+
+{
+  "kategori": {
+    "nama": "drink"
+  },
+  "menuFnb": {
+    "nama": "teh",
+    "harga": 10000,
+    "stok": 0
+  }
+}
