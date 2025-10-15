@@ -7,5 +7,6 @@ const adminMiddleware = require("../middleware/admin.middleware");
 route.post("/", adminMiddleware, menuFnbController.createMenuFnb);
 
 // all
+route.get("/", menuFnbController.getAllMenu);
 
 module.exports = route;

@@ -68,6 +68,35 @@ const createMenuFnb = async (request) => {
   });
 };
 
+/**
+ * ambil semua data menu
+ */
+const getAllMenu = async () => {
+  const data = await db.kategori_menu.findMany({
+    include: {
+      menu_fnb: {
+        select: {
+          id: true,
+          nama: true,
+          harga: true,
+          stok: true,
+          status: true,
+        },
+      },
+    },
+    orderBy: {
+      nama: "asc",
+    },
+  });
+
+  if (!data) {
+    throw ResponseError(404, "Menu not found");
+  }
+
+  return data;
+};
+
 module.exports = {
   createMenuFnb,
+  getAllMenu,
 };

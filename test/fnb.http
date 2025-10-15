@@ -13,3 +13,8 @@ Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
     "stok": 0
   }
 }
+
+### get all
+GET  http://localhost:5000/api/fnb
+Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1

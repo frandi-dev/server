@@ -13,6 +13,20 @@ const createMenuFnb = async (req, res, next) => {
   }
 };
 
+const getAllMenu = async (req, res, next) => {
+  try {
+    const result = await menuFnbService.getAllMenu();
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createMenuFnb,
+  getAllMenu,
 };
