@@ -5,6 +5,7 @@ const web = express();
 web.use(express.json());
 
 web.use("/api/users", require("./user.route"));
+web.use("/api/rooms", require("./room.route"));
 
 web.use(errorMiddleware);
 
