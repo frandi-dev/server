@@ -4,7 +4,6 @@ const userController = require("../controller/user.controller");
 const authMiddleware = require("../middleware/auth.middleware");
 const adminMiddleware = require("../middleware/admin.middleware");
 
-route.post("/", userController.createUser);
 route.post("/login", userController.loginUser);
 
 // private router harus membutuhkan Authorization
@@ -13,6 +12,7 @@ route.delete("/logout", userController.logoutUser);
 route.get("/profile", userController.getUserProfile);
 
 // route kusus admin
+route.post("/", adminMiddleware, userController.createUser);
 route.patch("/:username", adminMiddleware, userController.updateUser);
 route.get("/", adminMiddleware, userController.getAllUser);
 
