@@ -6,6 +6,11 @@ const {
   createMenuValidation,
 } = require("../validation/menu.fnb.validation");
 
+/**
+ *
+ * @param {object} request
+ * @returns {object}
+ */
 const createMenuFnb = async (request) => {
   const dataKategori = validate(createCategoryValidation, request.kategori);
   const dataMenu = validate(createMenuValidation, request.menuFnb);
