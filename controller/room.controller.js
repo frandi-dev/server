@@ -39,4 +39,40 @@ const updateRoom = async (req, res, next) => {
   }
 };
 
-module.exports = { createRoom, updateRoom };
+/**
+ * [GET] /api/rooms
+ * handler untuk get all data room
+ */
+const getAllRoom = async (req, res, next) => {
+  try {
+    const result = await roomService.getAllRoom();
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * [DELETE] /api/rooms/:id
+ * handler untuk delete
+ */
+const deleteRoom = async (req, res, next) => {
+  try {
+    await roomService.deleteRoom({
+      id: req.params.id,
+    });
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result: {},
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createRoom, updateRoom, getAllRoom, deleteRoom };

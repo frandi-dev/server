@@ -1,6 +1,7 @@
 ### create user
 POST http://localhost:5000/api/users 
 Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 
 {
   "username": "kasir",
@@ -14,15 +15,14 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-  "username": "kasir",
-  "password": "kasir"
+  "username": "admin",
+  "password": "admin"
 }
 
 ### get user by username
 GET http://localhost:5000/api/users/profile
 Content-Type: application/json
-Authorization: ae5de44b-bf8c-4031-a41b-daeebc3b5dee
-
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 
 ### updata user
 PATCH  http://localhost:5000/api/users/admin

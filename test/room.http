@@ -19,3 +19,9 @@ Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
   "kapasitas": 4,
   "tarif_per_jam": 20000
 }
+
+### Get all room
+GET  http://localhost:5000/api/rooms
+Content-Type: application/json
+Authorization: 5e379576-8ff5-4834-8d34-9d4680e583e8
+
