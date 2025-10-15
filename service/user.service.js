@@ -179,6 +179,11 @@ const updateUser = async (request) => {
   });
 };
 
+/**
+ * service untuk logout
+ * @param {object} request
+ * @returns {object}
+ */
 const logoutUser = async (request) => {
   const username = validate(getUserByUsernameValidation, request);
 
@@ -199,10 +204,35 @@ const logoutUser = async (request) => {
   });
 };
 
+/**
+ * service untuk get all data user berlaku untuk role admin
+ * @return {Object}
+ */
+const getAllUser = async () => {
+  const data = await db.users.findMany({
+    select: {
+      username: true,
+      nama: true,
+      role: true,
+      is_active: true,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  if (!data) {
+    throw new ResponseError(404, "Failed to retrieve user data");
+  }
+
+  return data;
+};
+
 module.exports = {
   createUser,
   loginUser,
   getUserProfile,
   updateUser,
   logoutUser,
+  getAllUser,
 };

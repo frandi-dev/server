@@ -90,10 +90,29 @@ const logoutUser = async (req, res, next) => {
   }
 };
 
+/**
+ * [GET] /api/users
+ * handler untuk mengambil semu data user kusus admin
+ */
+const getAllUser = async (req, res, next) => {
+  try {
+    const result = await userService.getAllUser();
+
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
   getUserProfile,
   updateUser,
   logoutUser,
+  getAllUser,
 };

@@ -11,6 +11,9 @@ route.post("/login", userController.loginUser);
 route.use(authMiddleware);
 route.delete("/logout", userController.logoutUser);
 route.get("/profile", userController.getUserProfile);
+
+// route kusus admin
 route.patch("/:username", adminMiddleware, userController.updateUser);
+route.get("/", adminMiddleware, userController.getAllUser);
 
 module.exports = route;

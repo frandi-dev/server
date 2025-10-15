@@ -14,8 +14,8 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "admin"
+  "username": "kasir",
+  "password": "kasir"
 }
 
 ### get user by username
@@ -37,4 +37,10 @@ Authorization: 81dc720a-abd2-42fa-a083-c0673068d45a
 DELETE  http://localhost:5000/api/users/logout
 Content-Type: application/json
 Authorization: ae5de44b-bf8c-4031-a41b-daeebc3b5dee
+
+
+### get all user kusus admin
+GET  http://localhost:5000/api/users
+Content-Type: application/json
+Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
 
