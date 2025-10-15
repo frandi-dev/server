@@ -8,3 +8,14 @@ Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
   "kapasitas": 4,
   "tarif_per_jam": 20000
 }
+
+### update room
+PATCH  http://localhost:5000/api/rooms/2
+Content-Type: application/json
+Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
+
+{
+  "nama": "R101",
+  "kapasitas": 4,
+  "tarif_per_jam": 20000
+}
