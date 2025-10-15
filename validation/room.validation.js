@@ -20,11 +20,20 @@ const updateRoomValidation = Joi.object({
 });
 
 const getRoomNameValidation = Joi.string().min(3).max(50).required();
-const idRequiredValidation = Joi.number().integer().required();
+const idRequiredValidation = Joi.object({
+  id: Joi.number().integer().required(),
+});
+const statusRoomValidation = Joi.object({
+  id: Joi.number().integer().required(),
+  status: Joi.string()
+    .valid("tersedia", "terisi", "perawatan")
+    .default("tersedia"),
+});
 
 module.exports = {
   createRoomValidation,
   getRoomNameValidation,
   updateRoomValidation,
   idRequiredValidation,
+  statusRoomValidation,
 };

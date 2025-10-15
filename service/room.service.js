@@ -3,6 +3,7 @@ const {
   createRoomValidation,
   updateRoomValidation,
   idRequiredValidation,
+  statusRoomValidation,
 } = require("../validation/room.validation");
 const db = require("../utils/db");
 const ResponseError = require("../utils/response.error");
@@ -89,6 +90,41 @@ const updateRoom = async (request) => {
 };
 
 /**
+ * Service untuk  update status room
+ * @param {Object} request
+ * @returns {object}
+ */
+const updateStatusRoom = async (request) => {
+  const data = validate(statusRoomValidation, request);
+
+  const room = await db.ruangan.count({
+    where: {
+      id: data.id,
+    },
+  });
+
+  if (room !== 1) {
+    throw new ResponseError(404, "Room not found");
+  }
+
+  return db.ruangan.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      status: data.status,
+    },
+    select: {
+      id: true,
+      nama: true,
+      kapasitas: true,
+      tarif_per_jam: true,
+      status: true,
+    },
+  });
+};
+
+/**
  * Service untuk get all data room
  * @returns {string}
  */
@@ -107,12 +143,14 @@ const getAllRoom = async () => {
 };
 
 const deleteRoom = async (request) => {
-  const id = validate(idRequiredValidation, request);
+  console.log(request);
+
+  const data = validate(idRequiredValidation, request);
 
   //cek apakah data room ada di db
   const room = await db.ruangan.count({
     where: {
-      id,
+      id: data.id,
     },
   });
 
@@ -123,7 +161,7 @@ const deleteRoom = async (request) => {
   // eksekusi delete
   await db.ruangan.delete({
     where: {
-      id,
+      id: data.id,
     },
   });
 
@@ -135,4 +173,5 @@ module.exports = {
   updateRoom,
   getAllRoom,
   deleteRoom,
+  updateStatusRoom,
 };

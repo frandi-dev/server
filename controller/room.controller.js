@@ -63,7 +63,7 @@ const getAllRoom = async (req, res, next) => {
 const deleteRoom = async (req, res, next) => {
   try {
     await roomService.deleteRoom({
-      id: req.params.id,
+      id: parseInt(req.params.id),
     });
     res.status(200).json({
       message: "success",
@@ -75,4 +75,30 @@ const deleteRoom = async (req, res, next) => {
   }
 };
 
-module.exports = { createRoom, updateRoom, getAllRoom, deleteRoom };
+/**
+ * [PATCH] /api/rooms/status/:id
+ * handler untuk update room status
+ */
+const updateStatusRoom = async (req, res, next) => {
+  try {
+    const result = roomService.updateStatusRoom({
+      id: parseInt(req.params.id),
+      ...req.body,
+    });
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createRoom,
+  updateRoom,
+  getAllRoom,
+  deleteRoom,
+  updateStatusRoom,
+};

@@ -1,10 +1,10 @@
 ### create new room
 POST http://localhost:5000/api/rooms
 Content-Type: application/json
-Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 
 {
-  "nama": "R101",
+  "nama": "R102",
   "kapasitas": 4,
   "tarif_per_jam": 20000
 }
@@ -24,4 +24,16 @@ Authorization: 12db5b84-f522-42df-99e0-be83d05e7189
 GET  http://localhost:5000/api/rooms
 Content-Type: application/json
 Authorization: 5e379576-8ff5-4834-8d34-9d4680e583e8
+
+
+### update status
+PATCH  http://localhost:5000/api/rooms/status/2
+Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+
+
+### delete
+DELETE http://localhost:5000/api/rooms/3
+Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 

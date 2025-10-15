@@ -10,5 +10,6 @@ route.delete("/:id", adminMiddleware, roomController.deleteRoom);
 
 // route untuk semua role
 route.get("/", roomController.getAllRoom);
+route.patch("/status/:id", roomController.updateStatusRoom);
 
 module.exports = route;
