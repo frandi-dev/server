@@ -30,10 +30,14 @@ const createMenuFnb = async (request) => {
   });
 
   // jika tidak ada nama kategory di db maka buat baru
-  if (!data.kategori) {
+  if (data.kategori.id === 0 && data.kategori.nama === 0) {
     data.kategori = await db.kategori_menu.create({
       data: {
         nama: dataKategori.nama,
+      },
+      select: {
+        id: true,
+        nama: true,
       },
     });
   }
@@ -176,11 +180,48 @@ const deleteMenuFnb = async (request) => {
     throw new ResponseError(404, "Menu not found");
   }
 
-  await db.menu_fnb.delete({
+  // kalo lolos validasi langsung hapus
+  const data = await db.menu_fnb.delete({
     where: { id },
+    select: {
+      nama: true,
+    },
   });
 
-  return "ok";
+  // cek apakah data berdasarkan kategory ada
+  const kategori = await db.kategori_menu.findMany({
+    include: {
+      menu_fnb: {
+        select: {
+          id: true,
+          nama: true,
+          harga: true,
+          stok: true,
+          status: true,
+        },
+        orderBy: {
+          nama: "asc",
+        },
+      },
+    },
+    orderBy: {
+      nama: "asc",
+    },
+  });
+
+  // cek apakah menu di dalam kategory ada
+  //kalao tidak ada langsung hapus kategory
+  kategori.map(async (menu) => {
+    if (menu.menu_fnb.length === 0) {
+      await db.kategori_menu.delete({
+        where: {
+          id: menu.id,
+        },
+      });
+    }
+  });
+
+  return data;
 };
 
 module.exports = {

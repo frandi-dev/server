@@ -55,11 +55,11 @@ const searchMenuFnb = async (req, res, next) => {
  */
 const deleteMenuFnb = async (req, res, next) => {
   try {
-    await menuFnbService.deleteMenuFnb(req.params.id);
+    const result = await menuFnbService.deleteMenuFnb(req.params.id);
     res.status(200).json({
       message: "success",
       error: false,
-      result: {},
+      result,
     });
   } catch (error) {
     next(error);
