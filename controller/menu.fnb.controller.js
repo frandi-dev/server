@@ -26,7 +26,23 @@ const getAllMenu = async (req, res, next) => {
   }
 };
 
+const searchMenuFnb = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    const result = await menuFnbService.searchMenuFnb(query);
+
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
+  searchMenuFnb,
 };

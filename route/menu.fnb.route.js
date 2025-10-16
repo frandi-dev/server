@@ -8,5 +8,6 @@ route.post("/", adminMiddleware, menuFnbController.createMenuFnb);
 
 // all
 route.get("/", menuFnbController.getAllMenu);
+route.get("/search", menuFnbController.searchMenuFnb);
 
 module.exports = route;

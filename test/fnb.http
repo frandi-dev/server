@@ -18,3 +18,9 @@ Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 GET  http://localhost:5000/api/fnb
 Content-Type: application/json
 Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+
+
+### search
+GET  http://localhost:5000/api/fnb/search?query=hjsdhks
+Content-Type: application/json
+Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1

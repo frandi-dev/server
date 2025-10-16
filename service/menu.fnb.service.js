@@ -4,6 +4,7 @@ const validate = require("../validation");
 const {
   createCategoryValidation,
   createMenuValidation,
+  searchMenuFnbValidation,
 } = require("../validation/menu.fnb.validation");
 
 /**
@@ -82,6 +83,9 @@ const getAllMenu = async () => {
           stok: true,
           status: true,
         },
+        orderBy: {
+          nama: "asc",
+        },
       },
     },
     orderBy: {
@@ -96,7 +100,66 @@ const getAllMenu = async () => {
   return data;
 };
 
+/**
+ * fitur cari menuFnb
+ */
+const searchMenuFnb = async (request) => {
+  const query = validate(searchMenuFnbValidation, request);
+  const data = {};
+
+  data.search = await db.kategori_menu.findMany({
+    where: {
+      OR: [{ nama: { contains: query } }],
+    },
+    include: {
+      menu_fnb: {
+        select: {
+          id: true,
+          nama: true,
+          harga: true,
+          stok: true,
+          status: true,
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      },
+    },
+    orderBy: {
+      nama: "asc",
+    },
+  });
+
+  if (data.search.length === 0) {
+    data.search = await db.menu_fnb.findMany({
+      where: {
+        OR: [{ nama: { contains: query } }],
+      },
+      select: {
+        id: true,
+        nama: true,
+        harga: true,
+        stok: true,
+        status: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  }
+
+  if (data.search.length === 0) {
+    throw new ResponseError(
+      404,
+      `the keyword you are looking for "${query}" does not exist`
+    );
+  }
+
+  return data.search;
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
+  searchMenuFnb,
 };

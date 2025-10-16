@@ -10,4 +10,10 @@ const createMenuValidation = Joi.object({
   stok: Joi.number().integer().required(),
 });
 
-module.exports = { createCategoryValidation, createMenuValidation };
+const searchMenuFnbValidation = Joi.string().required().trim();
+
+module.exports = {
+  createCategoryValidation,
+  createMenuValidation,
+  searchMenuFnbValidation,
+};
