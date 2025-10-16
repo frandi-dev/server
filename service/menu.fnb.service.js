@@ -5,6 +5,7 @@ const {
   createCategoryValidation,
   createMenuValidation,
   searchMenuFnbValidation,
+  deleteMenuFnbValidation,
 } = require("../validation/menu.fnb.validation");
 
 /**
@@ -158,8 +159,33 @@ const searchMenuFnb = async (request) => {
   return data.search;
 };
 
+/**
+ * Delete menu by id
+ */
+const deleteMenuFnb = async (request) => {
+  const id = validate(deleteMenuFnbValidation, request);
+
+  // cek apakah menu ada di db
+  const count = await db.menu_fnb.count({
+    where: {
+      id,
+    },
+  });
+
+  if (count === 0) {
+    throw new ResponseError(404, "Menu not found");
+  }
+
+  await db.menu_fnb.delete({
+    where: { id },
+  });
+
+  return "ok";
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
   searchMenuFnb,
+  deleteMenuFnb,
 };

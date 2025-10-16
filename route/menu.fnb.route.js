@@ -5,6 +5,7 @@ const adminMiddleware = require("../middleware/admin.middleware");
 
 // admin
 route.post("/", adminMiddleware, menuFnbController.createMenuFnb);
+route.delete("/:id", adminMiddleware, menuFnbController.deleteMenuFnb);
 
 // all
 route.get("/", menuFnbController.getAllMenu);

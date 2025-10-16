@@ -1,5 +1,8 @@
 const menuFnbService = require("../service/menu.fnb.service");
 
+/**
+ * handler untuk membuat menu kusus admin
+ */
 const createMenuFnb = async (req, res, next) => {
   try {
     const result = await menuFnbService.createMenuFnb(req.body);
@@ -13,6 +16,9 @@ const createMenuFnb = async (req, res, next) => {
   }
 };
 
+/**
+ * handler untuk get all
+ */
 const getAllMenu = async (req, res, next) => {
   try {
     const result = await menuFnbService.getAllMenu();
@@ -26,6 +32,9 @@ const getAllMenu = async (req, res, next) => {
   }
 };
 
+/**
+ * handler untuk pencarian berdasarkan nama kategory/menu
+ */
 const searchMenuFnb = async (req, res, next) => {
   try {
     const { query } = req.query;
@@ -41,8 +50,25 @@ const searchMenuFnb = async (req, res, next) => {
   }
 };
 
+/**
+ * handler untuk delete menu by id kusus admin
+ */
+const deleteMenuFnb = async (req, res, next) => {
+  try {
+    await menuFnbService.deleteMenuFnb(req.params.id);
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result: {},
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
   searchMenuFnb,
+  deleteMenuFnb,
 };
