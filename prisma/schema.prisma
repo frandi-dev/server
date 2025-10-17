@@ -70,19 +70,19 @@ enum status_ruangan {
 //  - Status bisa 'aktif', 'selesai', atau 'dibatalkan'.
 model pemesanan {
     id Int @id @default(autoincrement())
-    id_ruangan Int
+    id_ruangan Int @unique
     nama String @db.VarChar(100)  //Nama pelanggan yang melakukan pemesanan
-    waktu_mulai Decimal //Waktu mulai penggunaan ruangan
-    waktu_selesai Decimal //Waktu selesai aktual
+    waktu_mulai DateTime  //Waktu mulai penggunaan ruangan
+    waktu_selesai DateTime? //Waktu selesai aktual
+    durasi_menit Int
     status status_pemesanan @default(aktif) //Status pemesanan
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    
 
     // relasi ke users
     ruangan ruangan @relation(fields: [id_ruangan],references: [id])
     detail_pemesanan_fnb detail_pemesanan_fnb[]
     transaksi transaksi[]
-    @@index([id_ruangan,waktu_mulai,status])
+    @@index([id_ruangan,status])
 
 }
 

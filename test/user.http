@@ -4,10 +4,10 @@ Content-Type: application/json
 Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 
 {
-  "username": "kasir",
-  "nama": "kasir",
-  "password": "kasir",
-  "role": "kasir"
+  "username": "admin",
+  "nama": "admin",
+  "password": "admin",
+  "role": "admin"
 }
 
 ### login user

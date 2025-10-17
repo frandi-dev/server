@@ -33,14 +33,13 @@ CREATE TABLE `pemesanan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_ruangan` INTEGER NOT NULL,
     `nama` VARCHAR(100) NOT NULL,
-    `waktu_mulai` DECIMAL(65, 30) NOT NULL,
-    `waktu_selesai_est` DECIMAL(65, 30) NOT NULL,
-    `waktu_selesai_aktual` DECIMAL(65, 30) NOT NULL,
+    `waktu_mulai` DATETIME(3) NOT NULL,
+    `waktu_selesai` DATETIME(3) NULL,
+    `durasi_menit` INTEGER NOT NULL,
     `status` ENUM('aktif', 'selesai', 'dibatalkan') NOT NULL DEFAULT 'aktif',
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
 
-    INDEX `pemesanan_id_ruangan_waktu_mulai_status_idx`(`id_ruangan`, `waktu_mulai`, `status`),
+    UNIQUE INDEX `pemesanan_id_ruangan_key`(`id_ruangan`),
+    INDEX `pemesanan_id_ruangan_status_idx`(`id_ruangan`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

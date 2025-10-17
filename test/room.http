@@ -1,10 +1,10 @@
 ### create new room
 POST http://localhost:5000/api/rooms
 Content-Type: application/json
-Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+Authorization: d9564481-7431-40a2-a2a1-ca2763112ce9
 
 {
-  "nama": "R102",
+  "nama": "R101",
   "kapasitas": 4,
   "tarif_per_jam": 20000
 }

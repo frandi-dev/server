@@ -13,6 +13,7 @@ web.use(authMiddleware);
 web.use("/api/users", require("./user.route"));
 web.use("/api/rooms", require("./room.route"));
 web.use("/api/fnb", require("./menu.fnb.route"));
+web.use("/api/pemesanan", require("./pemesanan.route"));
 
 web.use(errorMiddleware);
 

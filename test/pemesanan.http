@@ -1,0 +1,11 @@
+
+### ceckin
+POST http://localhost:5000/api/pemesanan
+Content-Type: application/json
+Authorization: d9564481-7431-40a2-a2a1-ca2763112ce9
+
+{
+  "id_ruangan": 1,
+  "nama": "mr. g",
+  "durasi_menit": 60
+}

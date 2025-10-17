@@ -1,0 +1,16 @@
+const pemesananService = require("../service/pemesanan.service");
+
+const ceckIn = async (req, res, next) => {
+  try {
+    const result = await pemesananService.ceckIn(req.body);
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { ceckIn };
