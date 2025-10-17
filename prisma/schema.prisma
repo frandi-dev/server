@@ -70,7 +70,7 @@ enum status_ruangan {
 //  - Status bisa 'aktif', 'selesai', atau 'dibatalkan'.
 model pemesanan {
     id Int @id @default(autoincrement())
-    id_ruangan Int @unique
+    id_ruangan Int 
     nama String @db.VarChar(100)  //Nama pelanggan yang melakukan pemesanan
     waktu_mulai DateTime  //Waktu mulai penggunaan ruangan
     waktu_selesai DateTime? //Waktu selesai aktual

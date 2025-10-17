@@ -38,7 +38,6 @@ CREATE TABLE `pemesanan` (
     `durasi_menit` INTEGER NOT NULL,
     `status` ENUM('aktif', 'selesai', 'dibatalkan') NOT NULL DEFAULT 'aktif',
 
-    UNIQUE INDEX `pemesanan_id_ruangan_key`(`id_ruangan`),
     INDEX `pemesanan_id_ruangan_status_idx`(`id_ruangan`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

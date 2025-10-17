@@ -6,4 +6,8 @@ const ceckInValidation = Joi.object({
   durasi_menit: Joi.number().required(),
 });
 
+const ceckOutValidation = Joi.object({
+  id: Joi.number().integer().required(),
+});
+
 module.exports = { ceckInValidation };
