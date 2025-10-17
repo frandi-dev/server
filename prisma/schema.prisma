@@ -73,8 +73,7 @@ model pemesanan {
     id_ruangan Int
     nama String @db.VarChar(100)  //Nama pelanggan yang melakukan pemesanan
     waktu_mulai Decimal //Waktu mulai penggunaan ruangan
-    waktu_selesai_est Decimal //Estimasi waktu selesai
-    waktu_selesai_aktual Decimal //Waktu selesai aktual
+    waktu_selesai Decimal //Waktu selesai aktual
     status status_pemesanan @default(aktif) //Status pemesanan
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
