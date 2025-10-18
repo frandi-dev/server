@@ -4,6 +4,7 @@ const {
   ceckOutValidation,
   orderFnbValidation,
   updatePesananFnbValidation,
+  deletePesananFnbValidation,
 } = require("../validation/pemesanan.validation");
 const db = require("../utils/db");
 const ResponseError = require("../utils/response.error");
@@ -101,6 +102,7 @@ const previewPemesanan = async (request) => {
   const totalTagihan = totalSewa + biayaTambahan;
 
   return {
+    id: pemesanan.id,
     nama_pelanggan: pemesanan.nama,
     nama_ruangan: pemesanan.ruangan.nama,
     waktu_mulai: waktuMulai,
@@ -404,6 +406,51 @@ const updatePesananFnb = async (request) => {
   };
 };
 
+const deletePesananFnb = async (request) => {
+  const { id_detail } = validate(deletePesananFnbValidation, request);
+
+  const detail = await db.detail_pemesanan_fnb.findUnique({
+    where: {
+      id: id_detail,
+    },
+    include: { menu_fnb: true },
+  });
+
+  if (!detail) {
+    throw new ResponseError(404, "Order not found");
+  }
+
+  // cek pemesanan
+  const pemesanan = await db.pemesanan.findUnique({
+    where: { id: Number(detail.id_pemesanan) },
+    include: { ruangan: true },
+  });
+
+  if (!pemesanan || pemesanan.status !== "aktif") {
+    throw new ResponseError(400, "Order completed / canceled");
+  }
+
+  // kembalikan stok menu
+  await db.menu_fnb.update({
+    where: { id: detail.id_menu_fnb },
+    data: {
+      stok: { increment: detail.jumlah },
+      status: detail.menu_fnb.stok - 1 > 0 ? "tersedia" : "habis",
+    },
+  });
+
+  // habus detail
+  return db.detail_pemesanan_fnb.delete({
+    where: {
+      id: Number(id_detail),
+    },
+    select: {
+      id: true,
+      id_user: true, //untuk kebutuhan kirim ke oner
+    },
+  });
+};
+
 module.exports = {
   ceckIn,
   previewPemesanan,
@@ -411,4 +458,5 @@ module.exports = {
   pemesananFnb,
   previewPesananFnb,
   updatePesananFnb,
+  deletePesananFnb,
 };

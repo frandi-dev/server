@@ -31,9 +31,14 @@ const updatePesananFnbValidation = Joi.object({
   id_user: Joi.number().integer().positive().required(),
 });
 
+const deletePesananFnbValidation = Joi.object({
+  id_detail: Joi.number().integer().positive().required(),
+});
+
 module.exports = {
   ceckInValidation,
   ceckOutValidation,
   orderFnbValidation,
   updatePesananFnbValidation,
+  deletePesananFnbValidation,
 };

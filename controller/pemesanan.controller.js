@@ -90,6 +90,21 @@ const updatePesananFnb = async (req, res, next) => {
   }
 };
 
+const deletePesananFnb = async (req, res, next) => {
+  try {
+    const result = await pemesananService.deletePesananFnb({
+      id_detail: Number(req.params.id_detail),
+    });
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   ceckIn,
   previewPemesanan,
@@ -97,4 +112,5 @@ module.exports = {
   pemesananFnb,
   previewPesananFnb,
   updatePesananFnb,
+  deletePesananFnb,
 };
