@@ -8,8 +8,8 @@ const createUserValidation = Joi.object({
 });
 
 const loginUserValidation = Joi.object({
-  username: Joi.string().min(5).max(50).required(),
-  password: Joi.string().min(5).max(50).required(),
+  username: Joi.string().max(50).required(),
+  password: Joi.string().max(50).required(),
 });
 
 const getUserByUsernameValidation = Joi.string().min(5).max(50).required();

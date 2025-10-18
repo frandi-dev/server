@@ -4,9 +4,15 @@ const authMiddleware = require("../middleware/auth.middleware");
 const userController = require("../controller/user.controller");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
 const web = express();
 web.use(express.json());
+web.use(
+  cors({
+    origin: " http://localhost:5173",
+  })
+);
 // public
 web.post("/api/users/login", userController.loginUser);
 
