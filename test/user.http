@@ -1,13 +1,13 @@
 ### create user
 POST http://localhost:5000/api/users 
 Content-Type: application/json
-Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+Authorization: 7eee4f3a-f580-4a00-91c5-504df6b2bb64
 
 {
-  "username": "admin",
-  "nama": "admin",
-  "password": "admin",
-  "role": "admin"
+  "username": "kasir",
+  "nama": "kasir",
+  "password": "kasir",
+  "role": "kasir"
 }
 
 ### login user
