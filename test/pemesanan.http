@@ -37,18 +37,17 @@ Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 
 ### update pesanan fnb /pemesanan/:id_user/fnb/:id_detail
-PATCH http://localhost:5000/api/pemesanan/1/fnb/10
+PATCH http://localhost:5000/api/pemesanan/1/fnb/12
 Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 {
-  "jumlah": 2
+  "jumlah": 10
 }
 
 
-
 ### delete pesanan fnb /pemesanan/:id_detail/fnb
-DELETE http://localhost:5000/api/pemesanan/11/fnb
+DELETE http://localhost:5000/api/pemesanan/9/fnb
 Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
@@ -59,13 +58,13 @@ Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 {
-  "id": 10,
+  "id": 11,
   "id_user": 1,
   "durasi_dipesan_menit": 60,
   "total_sewa": 20000,
-  "total_fnb": 110000,
-  "total_tagihan": 130000,
+  "total_fnb": 40000,
+  "total_tagihan": 60000,
   "metode_pembayaran" : "tunai",
-  "jumlah_bayar": 130000,
+  "jumlah_bayar": 100000,
   "catatan": "test catatan"
 }

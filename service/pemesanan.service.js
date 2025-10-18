@@ -363,6 +363,16 @@ const updatePesananFnb = async (request) => {
     throw new ResponseError(404, "Order details not found");
   }
 
+  // cek pemesanan
+  const pemesanan = await db.pemesanan.findUnique({
+    where: { id: Number(detail.id_pemesanan) },
+    include: { ruangan: true },
+  });
+
+  if (!pemesanan || pemesanan.status !== "aktif") {
+    throw new ResponseError(400, "Order completed / canceled");
+  }
+
   const selisihJumlah = data.jumlah - detail.jumlah; // bisa positif atau negatif
 
   if (selisihJumlah !== 0) {
