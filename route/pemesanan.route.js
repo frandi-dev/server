@@ -5,4 +5,6 @@ const pemesananController = require("../controller/pemesanan.controller");
 // ceckin
 route.post("/", pemesananController.ceckIn);
 
+route.get("/preview/:id", pemesananController.previewPemesanan);
+
 module.exports = route;

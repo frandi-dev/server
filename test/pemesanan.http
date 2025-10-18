@@ -5,7 +5,13 @@ Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 {
-  "id_ruangan": 1,
-  "nama": "mr. g",
+  "id_ruangan": 5,
+  "nama": "mr. test2",
   "durasi_menit": 60
 }
+
+
+### preview
+GET  http://localhost:5000/api/pemesanan/preview/6
+Content-Type: application/json
+Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea

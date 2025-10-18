@@ -8,6 +8,10 @@ const ceckInValidation = Joi.object({
 
 const ceckOutValidation = Joi.object({
   id: Joi.number().integer().required(),
+  id_user: Joi.number().integer().required(),
+  // jumlah_bayar: Joi.number().integer().required(),
+  // metode_pembayaran: Joi.string().valid("tunai", "transfer", "qris").required(),
+  // catatan: Joi.string(),
 });
 
-module.exports = { ceckInValidation };
+module.exports = { ceckInValidation, ceckOutValidation };

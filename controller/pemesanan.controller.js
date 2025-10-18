@@ -13,4 +13,19 @@ const ceckIn = async (req, res, next) => {
   }
 };
 
-module.exports = { ceckIn };
+const previewPemesanan = async (req, res, next) => {
+  try {
+    const result = await pemesananService.previewPemesanan({
+      id: req.params.id,
+    });
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { ceckIn, previewPemesanan };
