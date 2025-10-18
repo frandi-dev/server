@@ -6,13 +6,13 @@ Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 {
   "id_ruangan": 5,
-  "nama": "mr. gaweng",
+  "nama": "mr. frandi",
   "durasi_menit": 60
 }
 
 
 ### preview
-GET  http://localhost:5000/api/pemesanan/preview/9
+GET  http://localhost:5000/api/pemesanan/preview/10
 Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
@@ -20,7 +20,7 @@ Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 
 ### pesan fnb
-POST http://localhost:5000/api/pemesanan/9/fnb
+POST http://localhost:5000/api/pemesanan/10/fnb
 Content-Type: application/json
 Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
@@ -29,6 +29,11 @@ Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
   "jumlah": 5,
   "id_user": 1
 }
+
+### pesan fnb preview
+GET  http://localhost:5000/api/pemesanan/10/fnb/preview
+Content-Type: application/json
+Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 
 ### ceckout

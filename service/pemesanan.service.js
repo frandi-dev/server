@@ -283,4 +283,74 @@ const pemesananFnb = async (request) => {
   };
 };
 
-module.exports = { ceckIn, previewPemesanan, ceckOut, pemesananFnb };
+const previewPesananFnb = async (request) => {
+  const { id } = request;
+
+  // cek pemesanan
+  const pemesanan = await db.pemesanan.findUnique({
+    where: { id: Number(id) },
+    include: { ruangan: true },
+  });
+
+  if (!pemesanan || pemesanan.status !== "aktif") {
+    throw new ResponseError(400, "Order completed / canceled");
+  }
+
+  // ambil semua pesanan fnb
+  const fnbOrder = await db.detail_pemesanan_fnb.findMany({
+    where: { id_pemesanan: Number(id) },
+    include: {
+      menu_fnb: {
+        select: {
+          nama: true,
+          harga: true,
+        },
+      },
+      users: {
+        select: { nama: true },
+      },
+    },
+    orderBy: {
+      created_at: "asc",
+    },
+  });
+
+  if (fnbOrder.length === 0) {
+    return {
+      nama_pelanggan: pemesanan.nama,
+      nama_ruangan: pemesanan.ruangan.nama,
+      daftar_pesanan: [],
+      total_fnb: 0,
+    };
+  }
+
+  // hitung total harga
+  const total_fnb = fnbOrder.reduce(
+    (asc, item) => asc + Number(item.subtotal),
+    0
+  );
+
+  // Bentuk hasil untuk dikirim ke client
+  const daftar_pesanan = fnbOrder.map((item) => ({
+    nama_menu: item.menu_fnb.nama,
+    harga_satuan: Number(item.menu_fnb.harga),
+    jumlah: item.jumlah,
+    subtotal: Number(item.subtotal),
+    dipesan: item.users.nama,
+  }));
+
+  return {
+    nama_pelanggan: pemesanan.nama,
+    nama_ruangan: pemesanan.ruangan.nama,
+    daftar_pesanan: daftar_pesanan,
+    total_fnb: total_fnb,
+  };
+};
+
+module.exports = {
+  ceckIn,
+  previewPemesanan,
+  ceckOut,
+  pemesananFnb,
+  previewPesananFnb,
+};
