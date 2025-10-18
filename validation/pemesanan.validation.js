@@ -25,4 +25,15 @@ const orderFnbValidation = Joi.object({
   id_user: Joi.number().integer().positive().required(),
 });
 
-module.exports = { ceckInValidation, ceckOutValidation, orderFnbValidation };
+const updatePesananFnbValidation = Joi.object({
+  id_detail: Joi.number().integer().positive().required(),
+  jumlah: Joi.number().integer().min(1).required(),
+  id_user: Joi.number().integer().positive().required(),
+});
+
+module.exports = {
+  ceckInValidation,
+  ceckOutValidation,
+  orderFnbValidation,
+  updatePesananFnbValidation,
+};

@@ -3,6 +3,7 @@ const {
   ceckInValidation,
   ceckOutValidation,
   orderFnbValidation,
+  updatePesananFnbValidation,
 } = require("../validation/pemesanan.validation");
 const db = require("../utils/db");
 const ResponseError = require("../utils/response.error");
@@ -332,6 +333,7 @@ const previewPesananFnb = async (request) => {
 
   // Bentuk hasil untuk dikirim ke client
   const daftar_pesanan = fnbOrder.map((item) => ({
+    id: item.id,
     nama_menu: item.menu_fnb.nama,
     harga_satuan: Number(item.menu_fnb.harga),
     jumlah: item.jumlah,
@@ -347,10 +349,66 @@ const previewPesananFnb = async (request) => {
   };
 };
 
+const updatePesananFnb = async (request) => {
+  const data = validate(updatePesananFnbValidation, request);
+
+  const detail = await db.detail_pemesanan_fnb.findUnique({
+    where: { id: data.id_detail },
+    include: { menu_fnb: true },
+  });
+
+  if (!detail) {
+    throw new ResponseError(404, "Order details not found");
+  }
+
+  const selisihJumlah = data.jumlah - detail.jumlah; // bisa positif atau negatif
+
+  if (selisihJumlah !== 0) {
+    const newStock = detail.menu_fnb.stok - selisihJumlah;
+    if (newStock < 0) {
+      throw new ResponseError(400, "Insufficient stock to update quantities");
+    }
+
+    await db.menu_fnb.update({
+      where: {
+        id: detail.id_menu_fnb,
+      },
+      data: {
+        stok: newStock,
+        status: newStock <= 0 ? "habis" : "tersedia",
+      },
+    });
+  }
+
+  // hitung subtotal baru
+  const newSubTotal = Number(detail.menu_fnb.harga) * data.jumlah;
+
+  const update = await db.detail_pemesanan_fnb.update({
+    where: { id: data.id_detail },
+    data: {
+      jumlah: data.jumlah,
+      subtotal: newSubTotal,
+      id_user: data.id_user,
+      updated_at: new Date(),
+    },
+    include: {
+      menu_fnb: { select: { nama: true, harga: true } },
+    },
+  });
+
+  return {
+    nama_menu: update.menu_fnb.nama,
+    harga: Number(update.menu_fnb.harga),
+    jumlah: update.jumlah,
+    subtotal: Number(update.subtotal),
+  };
+};
+
 module.exports = {
   ceckIn,
   previewPemesanan,
   ceckOut,
   pemesananFnb,
   previewPesananFnb,
+  updatePesananFnb,
 };

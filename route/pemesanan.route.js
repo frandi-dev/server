@@ -9,5 +9,6 @@ route.get("/preview/:id", pemesananController.previewPemesanan);
 route.post("/ceckout", pemesananController.ceckOut);
 route.post("/:id/fnb", pemesananController.pemesananFnb);
 route.get("/:id/fnb/preview", pemesananController.previewPesananFnb);
+route.patch("/:id_user/fnb/:id_detail", pemesananController.updatePesananFnb);
 
 module.exports = route;
