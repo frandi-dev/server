@@ -10,6 +10,11 @@ const createMenuValidation = Joi.object({
   stok: Joi.number().integer().required(),
 });
 
+const updateMenuValidation = Joi.object({
+  id: Joi.number().integer().positive().required(),
+  stok: Joi.number().integer().required(),
+});
+
 const searchMenuFnbValidation = Joi.string().required().trim();
 const deleteMenuFnbValidation = Joi.number().integer().required();
 
@@ -18,4 +23,5 @@ module.exports = {
   createMenuValidation,
   searchMenuFnbValidation,
   deleteMenuFnbValidation,
+  updateMenuValidation,
 };

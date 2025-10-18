@@ -6,6 +6,7 @@ const {
   createMenuValidation,
   searchMenuFnbValidation,
   deleteMenuFnbValidation,
+  updateMenuValidation,
 } = require("../validation/menu.fnb.validation");
 
 /**
@@ -224,9 +225,34 @@ const deleteMenuFnb = async (request) => {
   return data;
 };
 
+const updateStokMenu = async (request) => {
+  const { id, stok } = validate(updateMenuValidation, request);
+
+  const menu = await db.menu_fnb.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!menu) {
+    throw new ResponseError(404, "Menu not found");
+  }
+
+  return db.menu_fnb.update({
+    where: {
+      id,
+    },
+    data: {
+      stok,
+      status: stok < 1 ? "habis" : "tersedia",
+    },
+  });
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
   searchMenuFnb,
   deleteMenuFnb,
+  updateStokMenu,
 };

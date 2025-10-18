@@ -30,3 +30,12 @@ Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
 DELETE   http://localhost:5000/api/fnb/11
 Content-Type: application/json
 Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+
+### update menu
+PATCH http://localhost:5000/api/fnb/2
+Content-Type: application/json
+Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
+
+{
+  "stok": 10
+}

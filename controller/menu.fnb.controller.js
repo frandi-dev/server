@@ -66,9 +66,26 @@ const deleteMenuFnb = async (req, res, next) => {
   }
 };
 
+const updateStokMenu = async (req, res, next) => {
+  try {
+    const result = await menuFnbService.updateStokMenu({
+      id: Number(req.params.id),
+      ...req.body,
+    });
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createMenuFnb,
   getAllMenu,
   searchMenuFnb,
   deleteMenuFnb,
+  updateStokMenu,
 };
