@@ -28,4 +28,17 @@ const previewPemesanan = async (req, res, next) => {
   }
 };
 
-module.exports = { ceckIn, previewPemesanan };
+const ceckOut = async (req, res, next) => {
+  try {
+    const result = await pemesananService.ceckOut(req.body);
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { ceckIn, previewPemesanan, ceckOut };

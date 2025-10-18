@@ -1,8 +1,10 @@
 const validate = require("../validation");
-const { ceckInValidation } = require("../validation/pemesanan.validation");
+const {
+  ceckInValidation,
+  ceckOutValidation,
+} = require("../validation/pemesanan.validation");
 const db = require("../utils/db");
 const ResponseError = require("../utils/response.error");
-const formatRupiah = require("../utils/format.idr");
 
 const ceckIn = async (request) => {
   const data = validate(ceckInValidation, request);
@@ -105,24 +107,99 @@ const previewPemesanan = async (request) => {
     durasi_dipesan_menit: pemesanan.durasi_menit,
     sisa_waktu_menit: sisaMenit,
     sisa_waktu_jam: sisaJam,
-    total_sewa: formatRupiah(totalSewa),
-    total_fnb: formatRupiah(biayaTambahan),
-    total_tagihan: formatRupiah(totalTagihan),
-    status: "preview_only",
+    total_sewa: totalSewa,
+    total_fnb: biayaTambahan,
+    total_tagihan: totalTagihan,
   };
-
-  // return {
-  //   nama_pelanggan: pemesanan.nama,
-  //   nama_ruangan: pemesanan.ruangan.nama,
-  //   waktu_mulai: pemesanan.waktu_mulai,
-  //   waktu_sekarang: waktuSekarang,
-  //   durasi_menit: durasiMenit,
-  //   durasi_jam: durasiJam.toFixed(2),
-  //   total_sewa: totalSewa,
-  //   total_fnb: biayaTambahan,
-  //   total_tagihan: totalTagihan,
-  //   status: "preview_only",
-  // };
 };
 
-module.exports = { ceckIn, previewPemesanan };
+const ceckOut = async (request) => {
+  const {
+    id,
+    id_user,
+    durasi_dipesan_menit,
+    total_sewa,
+    total_fnb,
+    total_tagihan,
+    metode_pembayaran,
+    jumlah_bayar,
+    catatan,
+  } = validate(ceckOutValidation, request);
+
+  // ambil id pemesanan + ruangan
+  const pemesanan = await db.pemesanan.findFirst({
+    where: {
+      id,
+    },
+    include: { ruangan: true },
+  });
+  // cek apa ada pemesanan
+  if (!pemesanan) {
+    throw new ResponseError(404, "Order not found");
+  }
+
+  //cek status harus aktive
+  if (pemesanan.status !== "aktif") {
+    throw new ResponseError(400, "Order completed / canceled");
+  }
+
+  // hitung kembalian
+  if (jumlah_bayar < total_tagihan) {
+    throw new ResponseError(400, "The amount paid is less than the total bill");
+  }
+  const kembalian = jumlah_bayar - total_tagihan;
+  const waktu_selesai = new Date();
+
+  //simpan transaksi
+  const transaksi = await db.transaksi.create({
+    data: {
+      id_pemesanan: pemesanan.id,
+      id_user: id_user,
+      total_sewa: total_sewa,
+      biaya_tambahan: total_fnb,
+      total_tagihan: total_tagihan,
+      jumlah_bayar: jumlah_bayar,
+      kembalian: kembalian,
+      metode_pembayaran: metode_pembayaran,
+      catatan: catatan || "",
+      status: "lunas",
+    },
+    select: {
+      status: true,
+    },
+  });
+
+  // Update pemesanan dan ruangan
+  await db.pemesanan.update({
+    where: { id: pemesanan.id },
+    data: {
+      waktu_selesai: waktu_selesai,
+      durasi_menit: durasi_dipesan_menit,
+      status: "selesai",
+    },
+  });
+
+  await db.ruangan.update({
+    where: {
+      id: pemesanan.id_ruangan,
+    },
+    data: { status: "tersedia" },
+  });
+
+  // kirim hasil ke controller
+  return {
+    nama_pelanggan: pemesanan.nama,
+    nama_ruangan: pemesanan.ruangan.nama,
+    waktu_mulai: pemesanan.waktu_mulai,
+    waktu_selesai: waktu_selesai,
+    durasi_dipesan_menit,
+    total_sewa,
+    total_fnb,
+    total_tagihan,
+    jumlah_bayar,
+    kembalian,
+    status: transaksi.status,
+  };
+};
+
+module.exports = { ceckIn, previewPemesanan, ceckOut };
