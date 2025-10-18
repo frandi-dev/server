@@ -7,5 +7,6 @@ route.post("/", pemesananController.ceckIn);
 
 route.get("/preview/:id", pemesananController.previewPemesanan);
 route.post("/ceckout", pemesananController.ceckOut);
+route.post("/:id/fnb", pemesananController.pemesananFnb);
 
 module.exports = route;

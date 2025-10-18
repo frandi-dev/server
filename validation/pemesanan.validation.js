@@ -18,4 +18,11 @@ const ceckOutValidation = Joi.object({
   catatan: Joi.string().allow(null, "").optional(),
 });
 
-module.exports = { ceckInValidation, ceckOutValidation };
+const orderFnbValidation = Joi.object({
+  id_pemesanan: Joi.number().integer().positive().required(),
+  id_menu_fnb: Joi.number().integer().positive().required(),
+  jumlah: Joi.number().integer().min(1).required(),
+  id_user: Joi.number().integer().positive().required(),
+});
+
+module.exports = { ceckInValidation, ceckOutValidation, orderFnbValidation };

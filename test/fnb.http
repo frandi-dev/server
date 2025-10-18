@@ -1,23 +1,23 @@
 ### create menu
 POST http://localhost:5000/api/fnb
 Content-Type: application/json
-Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 {
   "kategori": {
     "nama": "drink"
   },
   "menuFnb": {
-    "nama": "teh",
+    "nama": "es teh",
     "harga": 10000,
-    "stok": 0
+    "stok": 1000
   }
 }
 
 ### get all
 GET  http://localhost:5000/api/fnb
 Content-Type: application/json
-Authorization: 55041b4a-bcce-4f0c-af96-c29cd297ebb1
+Authorization: ee596d5b-27a7-4061-b8ee-b8bbc6a312ea
 
 
 ### search

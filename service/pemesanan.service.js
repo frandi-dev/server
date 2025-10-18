@@ -2,6 +2,7 @@ const validate = require("../validation");
 const {
   ceckInValidation,
   ceckOutValidation,
+  orderFnbValidation,
 } = require("../validation/pemesanan.validation");
 const db = require("../utils/db");
 const ResponseError = require("../utils/response.error");
@@ -150,6 +151,16 @@ const ceckOut = async (request) => {
   const kembalian = jumlah_bayar - total_tagihan;
   const waktu_selesai = new Date();
 
+  // Ambil total F&B
+  const totalFnb = await db.detail_pemesanan_fnb.aggregate({
+    where: { id_pemesanan: Number(id) },
+    _sum: { subtotal: true },
+  });
+
+  const biayaTambahan = Number(totalFnb._sum.subtotal || 0);
+
+  const totalTagihan = total_sewa + biayaTambahan;
+
   //simpan transaksi
   const transaksi = await db.transaksi.create({
     data: {
@@ -157,7 +168,7 @@ const ceckOut = async (request) => {
       id_user: id_user,
       total_sewa: total_sewa,
       biaya_tambahan: total_fnb,
-      total_tagihan: total_tagihan,
+      total_tagihan: totalTagihan,
       jumlah_bayar: jumlah_bayar,
       kembalian: kembalian,
       metode_pembayaran: metode_pembayaran,
@@ -194,7 +205,7 @@ const ceckOut = async (request) => {
     waktu_selesai: waktu_selesai,
     durasi_dipesan_menit,
     total_sewa,
-    total_fnb,
+    biayaTambahan,
     total_tagihan,
     jumlah_bayar,
     kembalian,
@@ -202,4 +213,74 @@ const ceckOut = async (request) => {
   };
 };
 
-module.exports = { ceckIn, previewPemesanan, ceckOut };
+const pemesananFnb = async (request) => {
+  const { id_pemesanan, id_menu_fnb, jumlah, id_user } = validate(
+    orderFnbValidation,
+    request
+  );
+
+  // cek pemesanan masih aktive atau tidak
+  const pemesanan = await db.pemesanan.findUnique({
+    where: {
+      id: id_pemesanan,
+    },
+  });
+  if (!pemesanan || pemesanan.status !== "aktif") {
+    throw new ResponseError(400, "Order completed / canceled");
+  }
+
+  // cek menu fnb
+  const menu = await db.menu_fnb.findUnique({
+    where: { id: id_menu_fnb },
+  });
+
+  // cek menu ada / tidak
+  if (!menu) {
+    throw new ResponseError(404, "Menu not found");
+  }
+
+  if (menu.status !== "tersedia") {
+    throw new ResponseError(
+      400,
+      "The menu you selected is not available or is out of stock "
+    );
+  }
+
+  if (menu.stok < jumlah) {
+    throw new ResponseError(400, "Insufficient stock");
+  }
+
+  const subtotal = Number(menu.harga) * jumlah;
+
+  // simpan ke detail pemesanan fnb
+  const fnbOrder = await db.detail_pemesanan_fnb.create({
+    data: {
+      id_pemesanan: id_pemesanan,
+      id_menu_fnb: id_menu_fnb,
+      jumlah: jumlah,
+      subtotal: subtotal,
+      id_user: id_user,
+    },
+    include: {
+      menu_fnb: true,
+    },
+  });
+
+  // update stok pada menu fnb
+  await db.menu_fnb.update({
+    where: { id: id_menu_fnb },
+    data: {
+      stok: menu.stok - jumlah,
+      status: menu.stok - jumlah > 0 ? "tersedia" : "habis",
+    },
+  });
+
+  return {
+    id_pemesanan: fnbOrder.id_pemesanan,
+    nama_menu: fnbOrder.menu_fnb.nama,
+    jumlah: fnbOrder.jumlah,
+    subtotal: fnbOrder.subtotal,
+  };
+};
+
+module.exports = { ceckIn, previewPemesanan, ceckOut, pemesananFnb };
