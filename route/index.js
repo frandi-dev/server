@@ -2,11 +2,22 @@ const express = require("express");
 const errorMiddleware = require("../middleware/error.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
 const userController = require("../controller/user.controller");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 const web = express();
 web.use(express.json());
 // public
 web.post("/api/users/login", userController.loginUser);
+
+const httpServer = createServer(web);
+
+const io = new Server(httpServer, {
+  // options
+  cors: "*",
+});
+
+// hubungkan handler di sini
 
 // private
 web.use(authMiddleware);
@@ -17,4 +28,4 @@ web.use("/api/pemesanan", require("./pemesanan.route"));
 
 web.use(errorMiddleware);
 
-module.exports = web;
+module.exports = { web, httpServer };
