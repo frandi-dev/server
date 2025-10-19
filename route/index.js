@@ -10,7 +10,7 @@ const web = express();
 web.use(express.json());
 web.use(
   cors({
-    origin: " http://localhost:5173",
+    origin: "http://localhost:5173",
   })
 );
 // public
