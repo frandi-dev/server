@@ -105,6 +105,19 @@ const deletePesananFnb = async (req, res, next) => {
   }
 };
 
+const getPemesananByStatusAktive = async (req, res, next) => {
+  try {
+    const result = await pemesananService.getPemesananByStatusAktive();
+    res.status(200).json({
+      message: "success",
+      error: false,
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   ceckIn,
   previewPemesanan,
@@ -113,4 +126,5 @@ module.exports = {
   previewPesananFnb,
   updatePesananFnb,
   deletePesananFnb,
+  getPemesananByStatusAktive,
 };

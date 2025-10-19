@@ -461,6 +461,23 @@ const deletePesananFnb = async (request) => {
   });
 };
 
+const getPemesananByStatusAktive = async () => {
+  const pemesanan = await db.pemesanan.findMany({
+    where: {
+      status: "aktif",
+    },
+    select: {
+      nama: true,
+      id_ruangan: true,
+      waktu_mulai: true,
+      durasi_menit: true,
+      status: true,
+    },
+  });
+
+  return pemesanan;
+};
+
 module.exports = {
   ceckIn,
   previewPemesanan,
@@ -469,4 +486,5 @@ module.exports = {
   previewPesananFnb,
   updatePesananFnb,
   deletePesananFnb,
+  getPemesananByStatusAktive,
 };

@@ -4,7 +4,7 @@ const pemesananController = require("../controller/pemesanan.controller");
 
 // ceckin
 route.post("/", pemesananController.ceckIn);
-
+route.get("/", pemesananController.getPemesananByStatusAktive);
 route.get("/preview/:id", pemesananController.previewPemesanan);
 route.post("/ceckout", pemesananController.ceckOut);
 route.post("/:id/fnb", pemesananController.pemesananFnb);
