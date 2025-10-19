@@ -5,11 +5,12 @@ Content-Type: application/json
 Authorization: b970b5a5-ce63-4bae-ba72-a99220af811b
 
 {
-  "id_ruangan": 6,
-  "nama": "mr. frandi",
-  "durasi_menit": 120
+  "id_ruangan": 5,
+  "nama": "mr. hjhkjh",
+  "durasi_menit": 60,
+  "jumlah_orang": 4
 }
-
+ 
 
 ### preview
 GET  http://localhost:5000/api/pemesanan/preview/11

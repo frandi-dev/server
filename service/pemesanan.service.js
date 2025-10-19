@@ -22,15 +22,21 @@ const ceckIn = async (request) => {
       status: true,
     },
   });
+  // cek status ruangan
+  if (ruangan.status === "terisi") {
+    throw new ResponseError(204, "Room status must be 'tersedia'");
+  }
 
   // cek ruangan ada / tidak
   if (!ruangan) {
     throw new ResponseError(404, "Room not found");
   }
 
-  // cek status ruangan
-  if (ruangan.status === "terisi") {
-    throw new ResponseError(204, "Room status must be 'tersedia'");
+  if (data.jumlah_orang > ruangan.kapasitas) {
+    throw new ResponseError(
+      404,
+      "The number of people exceeds the room capacity"
+    );
   }
 
   // gunakan jika mau update ke selesai

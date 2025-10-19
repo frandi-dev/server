@@ -13,6 +13,7 @@ web.use(
     origin: "http://localhost:5173",
   })
 );
+web.use(errorMiddleware);
 // public
 web.post("/api/users/login", userController.loginUser);
 
@@ -31,7 +32,5 @@ web.use("/api/users", require("./user.route"));
 web.use("/api/rooms", require("./room.route"));
 web.use("/api/fnb", require("./menu.fnb.route"));
 web.use("/api/pemesanan", require("./pemesanan.route"));
-
-web.use(errorMiddleware);
 
 module.exports = { web, httpServer };
