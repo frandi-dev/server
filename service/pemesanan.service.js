@@ -473,6 +473,7 @@ const getPemesananByStatusAktive = async () => {
       status: "aktif",
     },
     select: {
+      id: true,
       nama: true,
       id_ruangan: true,
       waktu_mulai: true,
